@@ -27,7 +27,7 @@ function parseQuizText(raw) {
     const line = rawLine.trim();
 
     const qMatch = line.match(/^Q\s*\d+[.):]\s*(.*)$/i);
-    const optMatch = line.match(/^([A-Da-d])[.)]\s*(.*)$/);
+    const optMatch = line.match(/^\(?([A-Da-d])[.):]\s*(.*)$/);
     const expMatch = line.match(/^Explanation\s*:\s*(.*)$/i);
     const isSeparator = /^-{3,}$/.test(line) || /^=+$/.test(line);
 
