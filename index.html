@@ -59,12 +59,19 @@
       </div>
     </div>
 
+    <div class="register-toolbar">
+      <button class="btn btn-outline" id="exportAllBtn" type="button">&#8595; Export All</button>
+      <button class="btn btn-outline" id="importBtn" type="button">&#8593; Import</button>
+      <input type="file" id="importFileInput" accept="application/json,.json" hidden />
+    </div>
+    <div id="registerStatus" class="ai-status" hidden></div>
+
     <div id="quizList" class="quiz-list"></div>
 
     <div id="emptyState" class="empty-state" hidden>
       <div class="empty-stamp">∅</div>
       <h2>No sheets logged yet</h2>
-      <p>Upload a formatted .txt question bank to open your first register entry.</p>
+      <p>Upload a formatted .txt question bank to open your first register entry, or import a file you exported before.</p>
       <button class="btn btn-stamp" data-action="add">+ New Quiz</button>
     </div>
   </section>

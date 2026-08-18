@@ -113,6 +113,27 @@ Either way, you can keep adding new `.txt` files or AI sources any time
 — each becomes its own entry in the home page list ("the register"),
 with its own question count, a rename button, and a delete button.
 
+## 4. Move quizzes between devices (export / import)
+
+At the top of the home page there are two buttons:
+
+- **Export All** — downloads every quiz in your register as one `.json`
+  file (named `site-register-export-<date>.json`). Great for backups or
+  moving everything to a new device at once.
+- **Import** — pick a `.json` file exported from this app (from any
+  device) and its quizzes get added to whatever's already on this
+  device. Nothing gets overwritten or removed — imported quizzes are
+  always added on top of your existing ones, even if titles match.
+
+Each quiz card also has its own **Export** button, next to Rename and
+Remove, if you just want to share or move one specific quiz instead of
+everything.
+
+To move quizzes to another device: tap Export (all or one) here, send
+that `.json` file to the other device however you like (email, message,
+cloud drive, USB), then open this same app on that device and tap
+**Import**, picking the file you sent over.
+
 ## Notes
 
 - All quizzes live in your browser's local storage, scoped to whatever

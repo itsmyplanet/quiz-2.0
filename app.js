@@ -123,6 +123,59 @@ function renameQuiz(id, newTitle) {
   }
 }
 
+/* ---------- Export / Import ---------- */
+function downloadJSON(filename, dataObj) {
+  const blob = new Blob([JSON.stringify(dataObj, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function slugify(str) {
+  return (str || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-+|-+$)/g, "")
+    .slice(0, 50) || "quiz";
+}
+
+function exportQuizzes(quizzes, filename) {
+  const payload = {
+    app: "site-register",
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    quizzes: quizzes.map(q => ({ title: q.title, createdAt: q.createdAt, questions: q.questions }))
+  };
+  downloadJSON(filename, payload);
+}
+
+function importQuizzesFromPayload(data) {
+  const incoming = Array.isArray(data) ? data : (data && Array.isArray(data.quizzes) ? data.quizzes : null);
+  if (!incoming) {
+    throw new Error("That doesn't look like a Site Register export file.");
+  }
+  const valid = incoming.filter(q => q && typeof q.title === "string" && Array.isArray(q.questions) && q.questions.length > 0);
+  if (valid.length === 0) {
+    throw new Error("No valid quizzes found in that file.");
+  }
+
+  const imported = valid.map(q => ({
+    id: (crypto.randomUUID && crypto.randomUUID()) || String(Date.now()) + Math.random(),
+    title: q.title,
+    createdAt: q.createdAt || new Date().toISOString(),
+    questions: q.questions
+  }));
+
+  const existing = loadQuizzes();
+  saveQuizzes([...imported, ...existing]);
+  return imported.length;
+}
+
 function getQuiz(id) {
   return loadQuizzes().find(q => q.id === id);
 }
@@ -173,6 +226,41 @@ function renderHome() {
 
   const list = document.getElementById("quizList");
   const empty = document.getElementById("emptyState");
+  const statusBox = document.getElementById("registerStatus");
+
+  function setStatus(message, kind) {
+    statusBox.hidden = !message;
+    statusBox.textContent = message || "";
+    statusBox.className = "ai-status" + (kind ? ` ai-status-${kind}` : "");
+  }
+
+  document.getElementById("exportAllBtn").addEventListener("click", () => {
+    const current = loadQuizzes();
+    if (current.length === 0) {
+      setStatus("No quizzes to export yet.", "error");
+      return;
+    }
+    exportQuizzes(current, `site-register-export-${new Date().toISOString().slice(0, 10)}.json`);
+    setStatus(`Exported ${current.length} quiz${current.length === 1 ? "" : "zes"} to a .json file.`, "success");
+  });
+
+  const importFileInput = document.getElementById("importFileInput");
+  document.getElementById("importBtn").addEventListener("click", () => importFileInput.click());
+  importFileInput.addEventListener("change", async () => {
+    const file = importFileInput.files[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const data = JSON.parse(text);
+      const count = importQuizzesFromPayload(data);
+      setStatus(`Imported ${count} quiz${count === 1 ? "" : "zes"}.`, "success");
+      renderHome();
+    } catch (err) {
+      setStatus("Couldn't import that file: " + err.message, "error");
+    } finally {
+      importFileInput.value = "";
+    }
+  });
 
   if (quizzes.length === 0) {
     empty.hidden = false;
@@ -199,8 +287,9 @@ function renderHome() {
       </div>
       <div class="quiz-card-actions">
         <button class="btn btn-stamp" data-start="${quiz.id}">Start Inspection</button>
-        <button class="btn-delete" data-rename="${quiz.id}">Rename</button>
-        <button class="btn-delete" data-delete="${quiz.id}">Remove</button>
+        <button class="btn-outline" data-rename="${quiz.id}">Rename</button>
+        <button class="btn-outline" data-export-one="${quiz.id}">Export</button>
+        <button class="btn-outline btn-outline-danger" data-delete="${quiz.id}">Remove</button>
       </div>
     `;
     list.appendChild(card);
@@ -213,6 +302,12 @@ function renderHome() {
   });
   list.querySelectorAll("[data-rename]").forEach(btn => {
     btn.addEventListener("click", () => startRename(btn.dataset.rename));
+  });
+  list.querySelectorAll("[data-export-one]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const quiz = getQuiz(btn.dataset.exportOne);
+      if (quiz) exportQuizzes([quiz], `${slugify(quiz.title)}.json`);
+    });
   });
   list.querySelectorAll("[data-delete]").forEach(btn => {
     btn.addEventListener("click", () => {
