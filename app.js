@@ -473,12 +473,21 @@ function renderAdd() {
   const aiFormatBtn = document.getElementById("aiFormatBtn");
   const aiStatus = document.getElementById("aiStatus");
   const offlineNotice = document.getElementById("offlineNotice");
+  const forgetKeyBtn = document.getElementById("forgetKeyBtn");
+  const forgetKeyNote = document.getElementById("forgetKeyNote");
 
   const settings = loadSettings();
   if (settings.geminiApiKey) apiKeyInput.value = settings.geminiApiKey;
   if (settings.geminiModel) modelInput.value = settings.geminiModel;
   apiKeyInput.addEventListener("change", () => saveSettings({ geminiApiKey: apiKeyInput.value.trim() }));
   modelInput.addEventListener("change", () => saveSettings({ geminiModel: modelInput.value.trim() || "gemini-flash-latest" }));
+
+  forgetKeyBtn.addEventListener("click", () => {
+    apiKeyInput.value = "";
+    saveSettings({ geminiApiKey: "" });
+    forgetKeyNote.hidden = false;
+    setTimeout(() => { forgetKeyNote.hidden = true; }, 4000);
+  });
 
   let aiFile = null;
   function setAiFile(file) {

@@ -111,11 +111,16 @@
 
         <label class="field">
           <span class="field-label">Gemini API key</span>
-          <input type="password" id="apiKeyInput" placeholder="Paste your Google AI Studio key" autocomplete="off" />
+          <div class="key-row">
+            <input type="password" id="apiKeyInput" placeholder="Paste your Google AI Studio key" autocomplete="off" />
+            <button type="button" class="btn-forget" id="forgetKeyBtn">Forget saved key</button>
+          </div>
         </label>
+        <p class="field-note" id="forgetKeyNote" hidden>Saved key cleared from this device.</p>
         <p class="field-note">Stored only on this device, in this browser. Get a free key at
           <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>.
           Your file is sent directly from your browser to Google using your key — it never passes through any server of ours.
+          Using a shared or borrowed device? Tap "Forget saved key" before you leave.
         </p>
 
         <details class="format-help">
