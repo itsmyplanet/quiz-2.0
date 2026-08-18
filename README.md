@@ -102,9 +102,10 @@ review (and hand-edit if needed) before saving.
   clear error message and the text box stays fully editable — you can
   fix it by hand or switch to the manual tab instead. Nothing is lost.
 - There's an "Advanced: model name" field under the AI tab, pre-filled
-  with `gemini-flash-latest` (an alias Google keeps pointed at their
-  current best Flash model). If Google renames things and it stops
-  working, check
+  with `gemini-flash-lite-latest` — Google's lightest current Flash
+  model, chosen because it has the most generous free-tier rate limits
+  and is the least likely to return a "high demand" (503) error. If
+  Google renames things and it stops working, check
   [ai.google.dev/gemini-api/docs/models](https://ai.google.dev/gemini-api/docs/models)
   for the current model name and update that field.
 

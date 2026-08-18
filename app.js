@@ -480,7 +480,7 @@ function renderAdd() {
   if (settings.geminiApiKey) apiKeyInput.value = settings.geminiApiKey;
   if (settings.geminiModel) modelInput.value = settings.geminiModel;
   apiKeyInput.addEventListener("change", () => saveSettings({ geminiApiKey: apiKeyInput.value.trim() }));
-  modelInput.addEventListener("change", () => saveSettings({ geminiModel: modelInput.value.trim() || "gemini-flash-latest" }));
+  modelInput.addEventListener("change", () => saveSettings({ geminiModel: modelInput.value.trim() || "gemini-flash-lite-latest" }));
 
   forgetKeyBtn.addEventListener("click", () => {
     apiKeyInput.value = "";
@@ -522,7 +522,7 @@ function renderAdd() {
 
   aiFormatBtn.addEventListener("click", async () => {
     const apiKey = apiKeyInput.value.trim();
-    const model = modelInput.value.trim() || "gemini-flash-latest";
+    const model = modelInput.value.trim() || "gemini-flash-lite-latest";
 
     if (!navigator.onLine) {
       setAiStatus("You're offline — AI formatting needs an internet connection.", "error");
