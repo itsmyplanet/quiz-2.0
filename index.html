@@ -119,7 +119,9 @@
         <label class="field">
           <span class="field-label">Gemini API key</span>
           <div class="key-row">
-            <input type="password" id="apiKeyInput" placeholder="Paste your Google AI Studio key" autocomplete="off" />
+            <input type="text" id="apiKeyInput" class="masked-input" placeholder="Paste your Google AI Studio key"
+                   autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+                   data-lpignore="true" data-1p-ignore="true" data-bwignore="true" />
             <button type="button" class="btn-forget" id="forgetKeyBtn">Forget saved key</button>
           </div>
         </label>
